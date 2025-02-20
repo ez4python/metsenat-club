@@ -1,0 +1,7 @@
+*.env
+TODO
+*.sqlite3
+Makefile
+.idea
+.venv
+venv
