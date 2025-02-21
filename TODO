@@ -1,0 +1,38 @@
+MODELS:
+    ADMIN:
+        first_name(str)
+        last_name(str)
+        username(str, unique)
+        password(str, hash)
+
+    SPONSOR:
+        status(enum: str)
+        sponsor_type(enum: str)
+        sponsor_name(str)
+        phone_number(str) + regex
+        sponsorship_amount(int)
+        amount_spent(int)
+        organization
+        date(date_type)
+        payment_type(enum: str)
+
+    STUDENT:
+        student_type(enum: str)
+        fullname(str)
+        phone_number(str) + regex
+        university(University)
+        contract_amount(int)
+
+
+    UNIVERSITY:
+        name(str)
+
+VIEWS:
+    DASHBOARD:
+    HOMIYLAR:
+    TALABALAR:
+        
+
+UTILS:
+    LOGIN:
+        recaptcha
