@@ -19,7 +19,7 @@ class Admin(AbstractUser):
 
     class Meta:
         verbose_name = "Admin"
-        verbose_name_plural = "Admins"
+        verbose_name_plural = "Adminlar"
         db_table = 'admins'
 
     def __str__(self):

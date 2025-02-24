@@ -1,4 +1,3 @@
-from django.core.validators import MinValueValidator
 from django.db import models
 
 from apps.donations.models import Donation
@@ -6,18 +5,20 @@ from apps.donations.models import Donation
 
 # Create your models here.
 class StudentType(models.TextChoices):
-    BACHELOR = "bachelor", "Bachelor"
-    MASTER = "master", "Master"
+    BACHELOR = "bachelor", "Bakalavr"
+    MASTER = "master", "Magistr"
 
 
 class Student(models.Model):
     type = models.CharField(choices=StudentType.choices, default=StudentType.BACHELOR, max_length=10)
     full_name = models.CharField(blank=True, max_length=255)
     university = models.ForeignKey('shared.University', on_delete=models.CASCADE, related_name='students')
-    contract_amount = models.BigIntegerField()
-    donated_amount = models.BigIntegerField(default=0)
+    contract_amount = models.PositiveIntegerField()
+    donated_amount = models.PositiveIntegerField(default=0)
 
     class Meta:
+        verbose_name = 'Talaba'
+        verbose_name_plural = 'Talabalar'
         db_table = 'students'
 
     def __str__(self):
