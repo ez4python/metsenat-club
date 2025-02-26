@@ -1,0 +1,9 @@
+[
+    {
+        "model": "shared.university",
+        "pk": 1,
+        "fields": {
+            "name": "Toshkent Axborot Texnologiyalari Universiteti"
+        }
+    }
+]

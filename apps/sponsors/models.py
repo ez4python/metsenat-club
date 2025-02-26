@@ -1,11 +1,9 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
-
 from apps.shared.models import DateTimeBasedModel
 from apps.shared.validators import validate_phone_number
 
 
-# Create your models here.
 class SponsorType(models.TextChoices):
     LEGAL = "legal", "Jismoniy shaxs"
     INDIVIDUAL = "individual", "Yuridik shaxs"
@@ -32,7 +30,7 @@ class Sponsor(DateTimeBasedModel):
     organization_name = models.CharField(max_length=255, blank=True, null=True)
     payment_amount = models.PositiveIntegerField(validators=[MinValueValidator(1000000)])
     payment_type = models.CharField(max_length=20, choices=PaymentType.choices, default=PaymentType.TRANSFER)
-    spent_amount = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    spent_amount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])  # 🆕 Default qo'shildi
 
     class Meta:
         verbose_name = "Homiy"
@@ -40,4 +38,4 @@ class Sponsor(DateTimeBasedModel):
         db_table = "sponsors"
 
     def __str__(self):
-        return f"{self.full_name} - {self.payment_amount} UZS"
+        return f"{self.full_name} - {self.payment_amount} UZS - {self.organization_name}"

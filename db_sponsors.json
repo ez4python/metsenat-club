@@ -1,0 +1,18 @@
+[
+  {
+    "model": "sponsors.sponsor",
+    "pk": 1,
+    "fields": {
+      "updated_at": "2025-02-24T11:35:37.200Z",
+      "created_at": "2025-02-24T11:35:37.200Z",
+      "status": "new",
+      "sponsor_type": "legal",
+      "full_name": "Salohiddinov Akbarali Akram o'g'li",
+      "phone_number": "+998200158060",
+      "organization_name": "PDP Academy",
+      "payment_amount": 15000000,
+      "payment_type": "transfer",
+      "spent_amount": 0
+    }
+  }
+]

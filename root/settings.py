@@ -117,6 +117,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_RENDERER_CLASSES': (
+
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
@@ -193,3 +194,6 @@ LOGGING = {
         },
     },
 }
+
+RECAPTCHA_SITE_KEY = "6Le0DOMqAAAAAHw8rCGnue1OkHD0cPaIM3A8By2h"
+RECAPTCHA_SECRET_KEY = "6Le0DOMqAAAAAJuptDzK6Ow0PMKsDq7cSc5k7hOM"

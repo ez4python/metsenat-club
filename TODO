@@ -27,12 +27,29 @@ MODELS:
     UNIVERSITY:
         name(str)
 
-VIEWS:
-    DASHBOARD:
-    HOMIYLAR:
-    TALABALAR:
-        
 
 UTILS:
     LOGIN:
         recaptcha
+
+
+TASKS:
+    Viewlar:
+        Login:
+            1. LoginPage (username, password)
+
+        Dashboard:
+            1. LandingPage (jami to'langan, jami so'ralgan, to'lanishi kerak summalar)
+
+        Homiylar:
+            1. GraphicView (homiylar va talabalar sonini vaqtga nisbatan o'zgarishi)
+            2. Admin -> Homiylar (pagination(N-tadan))
+            3. Admin -> Homiylar -> Single (homiy ma'lumoti(GET, PUT, PATCH))
+            + filter(ariza holati, homiylik summasi, sana(ma'lum vaqt oralig'i bo'yicha))
+
+        Talabalar:
+            1. Admin -> Talabalar (pagination(N-tadan))
+            2. Talaba qo'shish
+            3. Admin -> Talabalar -> Single (talaba ma'lumoti(GET, PUT, PATCH))
+            4. Donation(Homiy) qo'shish + homiyni ma'lumoti(GET, PUT, PATCH)
+            + filter(talabalik turi, OTM bo'yicha)

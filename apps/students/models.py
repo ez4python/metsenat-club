@@ -1,9 +1,7 @@
 from django.db import models
-
 from apps.donations.models import Donation
 
 
-# Create your models here.
 class StudentType(models.TextChoices):
     BACHELOR = "bachelor", "Bakalavr"
     MASTER = "master", "Magistr"
@@ -14,7 +12,7 @@ class Student(models.Model):
     full_name = models.CharField(blank=True, max_length=255)
     university = models.ForeignKey('shared.University', on_delete=models.CASCADE, related_name='students')
     contract_amount = models.PositiveIntegerField()
-    donated_amount = models.PositiveIntegerField(default=0)
+    donated_amount = models.PositiveIntegerField(default=0)  # 🆕 Default qiymat qo'shildi
 
     class Meta:
         verbose_name = 'Talaba'
@@ -25,7 +23,7 @@ class Student(models.Model):
         return self.full_name
 
     def update_donation_amount(self):
-        """Updates the total amount allocated to the student"""
+        """Talabaning umumiy olgan homiylik mablag'ini yangilaydi"""
         total_donated = Donation.objects.filter(student=self).aggregate(models.Sum('amount'))['amount__sum'] or 0
         self.donated_amount = total_donated
-        self.save()
+        self.save(update_fields=['donated_amount'])

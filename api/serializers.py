@@ -21,3 +21,9 @@ class DonationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donation
         fields = "__all__"
+
+
+class UserTokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+    # recaptcha = serializers.CharField(help_text="Google reCAPTCHA token")
