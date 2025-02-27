@@ -39,17 +39,17 @@ TASKS:
              - 1. LoginPage (username, password)
 
         Dashboard:
-            1. LandingPage (jami to'langan, jami so'ralgan, to'lanishi kerak summalar)
-            2. GraphicView (homiylar va talabalar sonini vaqtga nisbatan o'zgarishi)
+             - 1. LandingPage (jami to'langan, jami so'ralgan, to'lanishi kerak summalar)
+             - 2. GraphicView (homiylar va talabalar sonini vaqtga nisbatan o'zgarishi)
 
         Homiylar:
-            1. Admin -> Homiylar (pagination(N-tadan))
-            2. Admin -> Homiylar -> Single (homiy ma'lumoti(GET, PUT, PATCH))
-            + filter(ariza holati, homiylik summasi, sana(ma'lum vaqt oralig'i bo'yicha))
+             - 1. Admin -> Homiylar (pagination(N-tadan))
+             - 2. Admin -> Homiylar -> Single (homiy ma'lumoti(GET, PUT, PATCH))
+             - + filter(ariza holati, homiylik summasi, sana(ma'lum vaqt oralig'i bo'yicha))
 
         Talabalar:
-            1. Admin -> Talabalar (pagination(N-tadan))
-            - 2. Talaba qo'shish
-            - 3. Admin -> Talabalar -> Single (talaba ma'lumoti(GET, PUT, PATCH))
-            - 4. Donation(Homiy) qo'shish + homiyni ma'lumoti(GET, PUT, PATCH)
+             - 1. Admin -> Talabalar (pagination(N-tadan))
+             - 2. Talaba qo'shish
+             - 3. Admin -> Talabalar -> Single (talaba ma'lumoti(GET, PUT, PATCH))
+             - 4. Donation(Homiy) qo'shish + homiyni ma'lumoti(GET, PUT, PATCH)
             + filter(talabalik turi, OTM bo'yicha)

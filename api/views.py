@@ -1,17 +1,24 @@
+from datetime import timedelta
+
 from django.contrib.auth import authenticate
+from django.db import models
+from django.db.models.functions import TruncDate
+from django.utils.timezone import now
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets, filters, status, parsers
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from api.filters import SponsorFilter, StudentFilter
+from api.pagination import CustomPagination
 from api.serializers import SponsorModelSerializer, DonationSerializer, StudentModelSerializer, UserTokenSerializer
 from apps.donations.models import Donation
 from apps.sponsors.models import Sponsor
 from apps.students.models import Student
-from utils.captcha import verify_recaptcha, get_recaptcha_token
 
 
 # Create your views here.
@@ -19,12 +26,15 @@ from utils.captcha import verify_recaptcha, get_recaptcha_token
 class SponsorViewSet(viewsets.ModelViewSet):
     queryset = Sponsor.objects.all().order_by("id")
     serializer_class = SponsorModelSerializer
-    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ["full_name", "phone_number"]
-    filterset_fields = ["sponsor_type", "payment_type", "spent_amount"]
+    filterset_class = SponsorFilter
+    ordering_fields = ["created_at", "payment_amount"]
+    ordering = "created_at"
+    pagination_class = CustomPagination
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             return [AllowAny()]
         return [IsAuthenticated()]
 
@@ -35,7 +45,9 @@ class StudentsViewSet(viewsets.ModelViewSet):
     serializer_class = StudentModelSerializer
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_filters = ["full_name", "university__name"]
-    filterset_fields = ["contract_amount", "donated_amount"]
+    filterset_class = StudentFilter
+
+    pagination_class = CustomPagination
 
 
 @extend_schema(tags=["Donation"])
@@ -92,3 +104,57 @@ class UserTokenAPIView(ObtainAuthToken):
             })
         else:
             return Response({"error": "Username or password wrong!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@extend_schema(tags=["Dashboard"])
+class DashboardStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        total_paid = Donation.objects.aggregate(total=models.Sum("amount"))["total"] or 0
+        total_requested = Donation.objects.aggregate(total=models.Sum("amount"))["total"] or 0
+        total_due = total_requested - total_paid
+
+        data = {
+            "total_paid": total_paid,
+            "total_requested": total_requested,
+            "total_due": total_due
+        }
+        return Response(data)
+
+
+@extend_schema(tags=["Dashboard"])
+class GrowthStatsAPIView(APIView):
+    """
+    bu API homiylar va talabalarni vaqtga bog'langan grafigi uchun ma'lumot qaytaradi (limit= 1 yil)
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        start_date = now() - timedelta(days=365)
+        sponsors = Sponsor.objects.filter(created_at__gte=start_date) \
+            .annotate(date=TruncDate('created_at')) \
+            .values('date') \
+            .annotate(count=models.Count('id')) \
+            .order_by('date')
+
+        students = Student.objects.filter(created_at__gte=start_date) \
+            .annotate(date=TruncDate('created_at')) \
+            .values('date') \
+            .annotate(count=models.Count('id')) \
+            .order_by('date')
+
+        sponsor_data = {str(item['date']): item['count'] for item in sponsors}
+        student_data = {str(item['date']): item['count'] for item in students}
+
+        all_dates = sorted(set(sponsor_data.keys()) | set(student_data.keys()))
+
+        result = []
+        for date in all_dates:
+            result.append({
+                "date": date,
+                "sponsors": sponsor_data.get(date, 0),
+                "students": student_data.get(date, 0)
+            })
+
+        return Response(result)

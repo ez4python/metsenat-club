@@ -1,5 +1,6 @@
 from django.db import models
 from apps.donations.models import Donation
+from apps.shared.models import DateTimeBasedModel
 
 
 class StudentType(models.TextChoices):
@@ -7,9 +8,9 @@ class StudentType(models.TextChoices):
     MASTER = "master", "Magistr"
 
 
-class Student(models.Model):
+class Student(DateTimeBasedModel):
     type = models.CharField(choices=StudentType.choices, default=StudentType.BACHELOR, max_length=10)
-    full_name = models.CharField(blank=True, max_length=255)
+    full_name = models.CharField(max_length=255)
     university = models.ForeignKey('shared.University', on_delete=models.CASCADE, related_name='students')
     contract_amount = models.PositiveIntegerField()
     donated_amount = models.PositiveIntegerField(default=0)  # 🆕 Default qiymat qo'shildi

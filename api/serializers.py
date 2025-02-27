@@ -27,3 +27,9 @@ class UserTokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
     # recaptcha = serializers.CharField(help_text="Google reCAPTCHA token")
+
+
+class DashboardStatisticsSerializer(serializers.Serializer):
+    total_paid = serializers.IntegerField()
+    total_requested = serializers.IntegerField()
+    total_due = serializers.IntegerField()

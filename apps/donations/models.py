@@ -33,3 +33,8 @@ class Donation(models.Model):  # Many-to-Many table sifatida ishlaydi
         self.sponsor.save(update_fields=['spent_amount'])
 
         self.student.update_donation_amount()  # Talabaning umumiy olgan mablag'ini yangilash
+
+    class Meta:
+        verbose_name = "Xayriya"
+        verbose_name_plural = "Xayriyalar"
+        db_table = "donations"

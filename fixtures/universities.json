@@ -5,5 +5,26 @@
         "fields": {
             "name": "Toshkent Axborot Texnologiyalari Universiteti"
         }
+    },
+    {
+        "model": "shared.university",
+        "pk": 2,
+        "fields": {
+            "name": "Toshkent Davlat Texnika Universiteti"
+        }
+    },
+    {
+        "model": "shared.university",
+        "pk": 3,
+        "fields": {
+            "name": "Toshkent Davlat Agrar Universiteti"
+        }
+    },
+    {
+        "model": "shared.university",
+        "pk": 4,
+        "fields": {
+            "name": "Toshkent Davlat Pedagogika Universiteti"
+        }
     }
 ]
