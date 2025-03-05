@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets, filters, status, parsers
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,8 +16,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.filters import SponsorFilter, StudentFilter
 from api.pagination import CustomPagination
-from api.serializers import SponsorModelSerializer, DonationSerializer, StudentModelSerializer, UserTokenSerializer
+from api.serializers import SponsorModelSerializer, DonationSerializer, StudentModelSerializer, UserTokenSerializer, \
+    UniversityModelSerializer, StudentDetailModelSerializer, GrowthStatsSerializer, DashboardStatisticsSerializer
 from apps.donations.models import Donation
+from apps.shared.models import University
 from apps.sponsors.models import Sponsor
 from apps.students.models import Student
 
@@ -24,7 +27,7 @@ from apps.students.models import Student
 # Create your views here.
 @extend_schema(tags=["Sponsors"])
 class SponsorViewSet(viewsets.ModelViewSet):
-    queryset = Sponsor.objects.all().order_by("id")
+    queryset = Sponsor.objects.order_by("id")
     serializer_class = SponsorModelSerializer
     filter_backends = [filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ["full_name", "phone_number"]
@@ -39,15 +42,15 @@ class SponsorViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
 
 
-@extend_schema(tags=["Students"])
+@extend_schema(tags=["Student"])
 class StudentsViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializer
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_filters = ["full_name", "university__name"]
     filterset_class = StudentFilter
-
     pagination_class = CustomPagination
+    http_method_names = ['get', 'post', 'put', 'patch']
 
 
 @extend_schema(tags=["Donation"])
@@ -57,8 +60,10 @@ class DonationViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ["sponsor__full_name", "student__full_name"]
     filterset_fields = ["amount"]
+    http_method_names = ["post", "get", "put", "patch"]
 
 
+@extend_schema(tags=["Auth"])
 class UserTokenAPIView(ObtainAuthToken):
     """
     JWT token for admins
@@ -106,13 +111,16 @@ class UserTokenAPIView(ObtainAuthToken):
             return Response({"error": "Username or password wrong!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-@extend_schema(tags=["Dashboard"])
+@extend_schema(tags=["Dashboard"], responses=DashboardStatisticsSerializer)
 class DashboardStatsView(APIView):
+    """
+    Dashboard uchun umumiy to'lov statistikasi
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        total_paid = Donation.objects.aggregate(total=models.Sum("amount"))["total"] or 0
-        total_requested = Donation.objects.aggregate(total=models.Sum("amount"))["total"] or 0
+        total_paid = Student.objects.aggregate(total=models.Sum("donated_amount"))["total"] or 0
+        total_requested = Student.objects.aggregate(total=models.Sum("contract_amount"))["total"] or 0
         total_due = total_requested - total_paid
 
         data = {
@@ -123,7 +131,7 @@ class DashboardStatsView(APIView):
         return Response(data)
 
 
-@extend_schema(tags=["Dashboard"])
+@extend_schema(tags=["Dashboard"], responses=GrowthStatsSerializer(many=True))
 class GrowthStatsAPIView(APIView):
     """
     bu API homiylar va talabalarni vaqtga bog'langan grafigi uchun ma'lumot qaytaradi (limit= 1 yil)
@@ -158,3 +166,17 @@ class GrowthStatsAPIView(APIView):
             })
 
         return Response(result)
+
+
+@extend_schema(tags=["University"])
+class UniversityListAPIView(ListAPIView):
+    queryset = University.objects.order_by('name')
+    serializer_class = UniversityModelSerializer
+    pagination_class = None
+
+
+@extend_schema(tags=["Student"])
+class StudentDetailAPIView(RetrieveAPIView):
+    queryset = Student.objects.prefetch_related("university", "donation_set__sponsor")
+    serializer_class = StudentDetailModelSerializer
+    lookup_field = "id"

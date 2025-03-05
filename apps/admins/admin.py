@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
 
@@ -38,7 +39,7 @@ class UserModelAdmin(UserAdmin):
     )
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
     list_filter = ("is_staff", "is_superuser", "is_active")
-    search_fields = ("username", "first_name", "last_name", "email")
+    search_fields = ("username", "first_name", "last_name")
     ordering = ("username",)
     filter_horizontal = ("user_permissions",)
 
@@ -59,5 +60,8 @@ class DonationModelAdmin(admin.ModelAdmin):
 
 
 @admin.register(University)
-class University(admin.ModelAdmin):
+class UniversityModelAdmin(admin.ModelAdmin):
     pass
+
+
+admin.site.unregister(Group)

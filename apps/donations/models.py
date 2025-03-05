@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 
-class Donation(models.Model):  # Many-to-Many table sifatida ishlaydi
+class Donation(models.Model):
     student = models.ForeignKey('students.Student', on_delete=models.CASCADE)
     sponsor = models.ForeignKey('sponsors.Sponsor', on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
@@ -32,7 +32,7 @@ class Donation(models.Model):  # Many-to-Many table sifatida ishlaydi
         self.sponsor.spent_amount += self.amount
         self.sponsor.save(update_fields=['spent_amount'])
 
-        self.student.update_donation_amount()  # Talabaning umumiy olgan mablag'ini yangilash
+        self.student.update_donation_amount()
 
     class Meta:
         verbose_name = "Xayriya"

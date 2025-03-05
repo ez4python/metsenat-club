@@ -4,33 +4,39 @@ MODELS:
         last_name(str)
         username(str, unique)
         password(str, hash)
+        phone_number(str) + regex
 
     SPONSOR:
         status(enum: str)
-        sponsor_type(enum: str)
-        sponsor_name(str)
+        type(enum: str)
+        full_name(str)
         phone_number(str) + regex
-        sponsorship_amount(int)
-        amount_spent(int)
-        organization
-        date(date_type)
+        organization_name(str)
+        payment_amount(+int)
         payment_type(enum: str)
+        spent_amount(+int)
 
     STUDENT:
-        student_type(enum: str)
-        fullname(str)
-        phone_number(str) + regex
+        type(enum: str)
+        full_name(str)
         university(University)
-        contract_amount(int)
-
+        contract_amount(+int)
+        donated_amount(+int)
 
     UNIVERSITY:
         name(str)
 
+    DONATION:
+        student(Student)
+        sponsor(Sponsor)
+        amount(+int)
+        date(date-time)
 
 UTILS:
     LOGIN:
         recaptcha
+    FIXTURE:
+        export_fixture(func)
 
 
 TASKS:
@@ -52,4 +58,4 @@ TASKS:
              - 2. Talaba qo'shish
              - 3. Admin -> Talabalar -> Single (talaba ma'lumoti(GET, PUT, PATCH))
              - 4. Donation(Homiy) qo'shish + homiyni ma'lumoti(GET, PUT, PATCH)
-            + filter(talabalik turi, OTM bo'yicha)
+             - + filter(talabalik turi, OTM bo'yicha)

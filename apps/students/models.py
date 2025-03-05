@@ -13,7 +13,7 @@ class Student(DateTimeBasedModel):
     full_name = models.CharField(max_length=255)
     university = models.ForeignKey('shared.University', on_delete=models.CASCADE, related_name='students')
     contract_amount = models.PositiveIntegerField()
-    donated_amount = models.PositiveIntegerField(default=0)  # 🆕 Default qiymat qo'shildi
+    donated_amount = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = 'Talaba'

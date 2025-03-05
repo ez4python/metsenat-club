@@ -5,8 +5,8 @@ from apps.shared.validators import validate_phone_number
 
 
 class SponsorType(models.TextChoices):
-    LEGAL = "legal", "Jismoniy shaxs"
-    INDIVIDUAL = "individual", "Yuridik shaxs"
+    LEGAL = "legal", "Yuridik shaxs"
+    INDIVIDUAL = "individual", "Jismoniy shaxs"
 
 
 class PaymentType(models.TextChoices):
@@ -30,7 +30,7 @@ class Sponsor(DateTimeBasedModel):
     organization_name = models.CharField(max_length=255, blank=True, null=True)
     payment_amount = models.PositiveIntegerField(validators=[MinValueValidator(1000000)])
     payment_type = models.CharField(max_length=20, choices=PaymentType.choices, default=PaymentType.TRANSFER)
-    spent_amount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])  # 🆕 Default qo'shildi
+    spent_amount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
 
     class Meta:
         verbose_name = "Homiy"
@@ -38,4 +38,7 @@ class Sponsor(DateTimeBasedModel):
         db_table = "sponsors"
 
     def __str__(self):
-        return f"{self.full_name} - {self.payment_amount} UZS - {self.organization_name}"
+        result = f"{self.full_name} - {self.payment_amount} UZS"
+        if self.organization_name is not None:
+            return result + f" - {self.organization_name}"
+        return result

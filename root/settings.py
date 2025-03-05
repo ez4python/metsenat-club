@@ -4,10 +4,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('local.env')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-4g*)47%rmz+*c93ftj4sl)xf5bj&o--ops_9zm)4iav2)h#^-2")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -175,27 +175,27 @@ SIMPLE_JWT = {
 }
 
 # configuration of all project logs
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "django.db.backends": {  # Faqat database loglarini chiqarish
-            "level": "DEBUG",
-            "handlers": ["console"],
-            "propagate": False,
-        },
-        "django.request": {  # Faqat HTTP request loglarini chiqarish
-            "level": "DEBUG",
-            "handlers": ["console"],
-            "propagate": False,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#         },
+#     },
+#     "loggers": {
+#         "django.db.backends": {  # Faqat database loglarini chiqarish
+#             "level": "DEBUG",
+#             "handlers": ["console"],
+#             "propagate": False,
+#         },
+#         "django.request": {  # Faqat HTTP request loglarini chiqarish
+#             "level": "DEBUG",
+#             "handlers": ["console"],
+#             "propagate": False,
+#         },
+#     },
+# }
 
-RECAPTCHA_SITE_KEY = "6Le0DOMqAAAAAHw8rCGnue1OkHD0cPaIM3A8By2h"
-RECAPTCHA_SECRET_KEY = "6Le0DOMqAAAAAJuptDzK6Ow0PMKsDq7cSc5k7hOM"
+RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY")
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")

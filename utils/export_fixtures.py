@@ -4,12 +4,12 @@ from django.core.serializers import serialize
 from django.conf import settings
 
 # Django muhitini ishga tushiramiz
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')  # 🔹 Loyihangiz nomini o'zgartiring
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'root.settings')  # Loyihangiz nomini o'zgartiring
 import django
 
 django.setup()
 
-# 🔹 Modelni import qilish
+# Modelni import qilish
 from apps.students.models import Student
 from apps.sponsors.models import Sponsor
 from apps.donations.models import Donation
