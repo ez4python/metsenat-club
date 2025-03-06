@@ -35,6 +35,7 @@ class SponsorViewSet(viewsets.ModelViewSet):
     ordering_fields = ["created_at", "payment_amount"]
     ordering = "created_at"
     pagination_class = CustomPagination
+    http_method_names = ["post", "get", "put", "patch"]
 
     def get_permissions(self):
         if self.action == "create":
