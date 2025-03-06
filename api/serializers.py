@@ -14,6 +14,8 @@ class SponsorModelSerializer(serializers.ModelSerializer):
 
 
 class StudentModelSerializer(serializers.ModelSerializer):
+    university = serializers.CharField(source="university.name")
+
     class Meta:
         model = Student
         fields = "__all__"

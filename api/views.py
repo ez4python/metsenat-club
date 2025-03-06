@@ -63,6 +63,15 @@ class DonationViewSet(viewsets.ModelViewSet):
     filterset_fields = ["amount"]
     http_method_names = ["post", "get", "put", "patch"]
 
+    @extend_schema(exclude=True)
+    def list(self, request, *args, **kwargs):
+        return Response({"detail": "Bu API mavjud emas"}, status=status.HTTP_403_FORBIDDEN)
+
+    def get_permissions(self):
+        if self.action == "list":
+            self.http_method_names = ["post", "put", "patch"]
+        return super().get_permissions()
+
 
 @extend_schema(tags=["Auth"])
 class UserTokenAPIView(ObtainAuthToken):
