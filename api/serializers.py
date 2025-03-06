@@ -52,6 +52,7 @@ class SponsorSerializer(serializers.ModelSerializer):
 
 
 class StudentDetailModelSerializer(serializers.ModelSerializer):
+    university = serializers.CharField(source="university.name")
     sponsors = serializers.SerializerMethodField()
 
     class Meta:
