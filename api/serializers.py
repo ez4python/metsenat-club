@@ -1,4 +1,6 @@
-from drf_spectacular.utils import extend_schema_serializer, extend_schema_field
+from collections import OrderedDict
+
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from apps.donations.models import Donation
@@ -8,9 +10,21 @@ from apps.students.models import Student
 
 
 class SponsorModelSerializer(serializers.ModelSerializer):
+    spent_amount = serializers.IntegerField(default=0)
+    payment_amount = serializers.IntegerField(default=0)
+
     class Meta:
         model = Sponsor
-        fields = "__all__"
+        fields = [
+            'status',
+            'sponsor_type',
+            'full_name',
+            'phone_number',
+            'organization_name',
+            'payment_amount',
+            'payment_type',
+            'spent_amount'
+        ]
 
 
 class StudentModelSerializer(serializers.ModelSerializer):

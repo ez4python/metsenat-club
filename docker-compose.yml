@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: compose/db/Dockerfile
+    container_name: metsenat_db
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+      dockerfile: compose/app/Dockerfile
+    container_name: metsenat_web
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - local.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: [ "gunicorn", "--bind", "0.0.0.0:8000", "root.wsgi:application" ]
+
+volumes:
+  postgres_data:
